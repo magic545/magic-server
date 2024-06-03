@@ -14,8 +14,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(
     session({
-      secret: 'isme',
-      name: 'isme.session',
+      secret: 'magic',
+      name: 'magic.session',
       rolling: true,
       cookie: { maxAge: null },
       resave: false,
