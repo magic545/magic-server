@@ -59,7 +59,7 @@ export class CreatePermissionDto {
 
   @IsNumber()
   @IsOptional()
-  order?: number;
+  sort?: number;
 
   @IsBoolean()
   @IsOptional()

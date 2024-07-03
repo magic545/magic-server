@@ -1,7 +1,7 @@
 /**********************************
  * @Author: Ronnie Zhang
  * @LastEditor: Ronnie Zhang
- * @LastEditTime: 2023/12/07 20:28:41
+ * @LastEditTime: 2024-06-05 22:10:33
  * @Email: zclzone@outlook.com
  * Copyright © 2023 Ronnie Zhang(大脸怪) | https://isme.top
  **********************************/
@@ -30,7 +30,7 @@ import {
 } from './dto';
 import { CustomException, ErrorCode } from '@/common/exceptions/custom.exception';
 import { JwtGuard, PreviewGuard, RoleGuard } from '@/common/guards';
-import { Roles } from '@/common/decorators/roles.decorator';
+import { Roles, SUPER_ADMIN } from '@/common/decorators/roles.decorator';
 
 @Controller('user')
 @UseGuards(JwtGuard, RoleGuard)
@@ -39,7 +39,7 @@ export class UserController {
 
   @Post()
   @UseGuards(PreviewGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles(SUPER_ADMIN)
   addUser(@Body() user: CreateUserDto) {
     return this.userService.create(user);
   }
@@ -51,7 +51,7 @@ export class UserController {
 
   @Delete(':id')
   @UseGuards(PreviewGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles(SUPER_ADMIN)
   deleteUser(@Param('id') id: number, @Request() req: any) {
     const currentUser = req.user;
 
@@ -62,7 +62,7 @@ export class UserController {
 
   @Patch(':id')
   @UseGuards(PreviewGuard)
-  @Roles('SUPER_ADMIN', 'SYS_ADMIN')
+  @Roles(SUPER_ADMIN, 'SYS_ADMIN')
   updateUser(@Param('id') id: number, @Body() user: UpdateUserDto) {
     return this.userService.update(id, user);
   }
@@ -94,7 +94,7 @@ export class UserController {
   }
 
   @Get(':username')
-  @Roles('SUPER_ADMIN')
+  @Roles(SUPER_ADMIN)
   findByUsername(@Param('username') username: string) {
     return this.userService.findByUsername(username);
   }
@@ -105,7 +105,7 @@ export class UserController {
     // 涉及隐私信息，只能本人或者超管查询
     const currentUser = req.user;
     // 只能本人或者超管查询
-    if (currentUser.userId === userId || currentUser.roles.includes('SUPER_ADMIN')) {
+    if (currentUser.userId === userId || currentUser.roles.includes(SUPER_ADMIN)) {
       return this.userService.findUserProfile(userId);
     }
     throw new CustomException(ErrorCode.ERR_11003);
@@ -113,7 +113,7 @@ export class UserController {
 
   /** 给用户赋角色 */
   @Post('roles/add/:userId')
-  @Roles('SUPER_ADMIN')
+  @Roles(SUPER_ADMIN)
   @UseGuards(PreviewGuard)
   addRoles(@Param('userId') userId: number, @Body() dto: AddUserRolesDto) {
     return this.userService.addRoles(userId, dto.roleIds);
@@ -121,7 +121,7 @@ export class UserController {
 
   /** 管理员重置密码 */
   @Patch('password/reset/:userId')
-  @Roles('SUPER_ADMIN')
+  @Roles(SUPER_ADMIN)
   @UseGuards(PreviewGuard)
   resetPassword(@Param('userId') userId: number, @Body() dto: UpdatePasswordDto) {
     return this.userService.resetPassword(userId, dto.password);

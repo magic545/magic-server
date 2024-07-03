@@ -1,7 +1,7 @@
 /**********************************
  * @Author: Ronnie Zhang
  * @LastEditor: Ronnie Zhang
- * @LastEditTime: 2023/12/07 20:29:09
+ * @LastEditTime: 2024-06-06 17:44:46
  * @Email: zclzone@outlook.com
  * Copyright © 2023 Ronnie Zhang(大脸怪) | https://isme.top
  **********************************/
@@ -23,8 +23,8 @@ export class UserService {
     private userRep: Repository<User>,
     @InjectRepository(Profile)
     private profileRep: Repository<Profile>,
-    @InjectRepository(Role) private roleRepo: Repository<Role>,
-  ) {}
+    @InjectRepository(Role) private roleRep: Repository<Role>,
+  ) { }
 
   async create(user: CreateUserDto) {
     const { username } = user;
@@ -36,12 +36,12 @@ export class UserService {
 
     const newUser = this.userRep.create(user);
     if (user.roleIds !== undefined) {
-      newUser.roles = await this.roleRepo.find({
+      newUser.roles = await this.roleRep.find({
         where: { id: In(user.roleIds) },
       });
     }
     if (!newUser.profile) {
-      newUser.profile = this.profileRep.create();
+      newUser.profile = this.profileRep.create({ nickName: username.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase()) });
     }
     newUser.password = hashSync(newUser.password);
     await this.userRep.save(newUser);
@@ -58,6 +58,7 @@ export class UserService {
           avatar: true,
           email: true,
           address: true,
+          nickName: true
         },
         roles: true,
       },
@@ -105,7 +106,7 @@ export class UserService {
   async update(id: number, user: UpdateUserDto) {
     const findUser = await this.findUserProfile(id);
     if (user.roleIds !== undefined) {
-      findUser.roles = await this.roleRepo.find({
+      findUser.roles = await this.roleRep.find({
         where: { id: In(user.roleIds) },
       });
     }
@@ -169,7 +170,7 @@ export class UserService {
       where: { id: userId },
       relations: { roles: true },
     });
-    const roles = await this.roleRepo.find({
+    const roles = await this.roleRep.find({
       where: roleIds.map((item) => ({ id: item })),
     });
     user.roles = user.roles.filter((item) => !roleIds.includes(item.id)).concat(roles);

@@ -1,7 +1,7 @@
 /**********************************
  * @Author: Ronnie Zhang
  * @LastEditor: Ronnie Zhang
- * @LastEditTime: 2023/12/07 20:29:00
+ * @LastEditTime: 2024-06-05 21:18:09
  * @Email: zclzone@outlook.com
  * Copyright © 2023 Ronnie Zhang(大脸怪) | https://isme.top
  **********************************/
@@ -13,10 +13,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Profile } from './profile.entity';
 import { Role } from '@/modules/role/role.entity';
+import { Order } from '@/modules/order/order.entity';
 
 @Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Profile, Role])],
+  imports: [TypeOrmModule.forFeature([User, Profile, Role, Order])],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],

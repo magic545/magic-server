@@ -1,7 +1,7 @@
 /**********************************
  * @Author: Ronnie Zhang
  * @LastEditor: Ronnie Zhang
- * @LastEditTime: 2023/12/07 20:28:50
+ * @LastEditTime: 2024-06-07 20:50:07
  * @Email: zclzone@outlook.com
  * Copyright © 2023 Ronnie Zhang(大脸怪) | https://isme.top
  **********************************/
@@ -13,11 +13,13 @@ import {
   JoinTable,
   ManyToMany,
   OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Profile } from './profile.entity';
 import { Role } from '@/modules/role/role.entity';
+import { Order } from '@/modules/order/order.entity';
 
 @Entity()
 export class User {
@@ -50,4 +52,9 @@ export class User {
   })
   @JoinTable()
   roles: Role[];
+  
+  @OneToMany(() => Order, (order) => order.user, {
+    createForeignKeyConstraints: false,
+  })
+  orders: Order[];
 }

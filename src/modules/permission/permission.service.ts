@@ -36,14 +36,14 @@ export class PermissionService {
   }
 
   async findAllTree() {
-    const permissions = await this.permissionRepo.find({ order: { order: 'ASC' } });
+    const permissions = await this.permissionRepo.find({ order: { sort: 'ASC' } });
     return this.sharedService.handleTree(permissions);
   }
 
   async findMenuTree() {
     const permissions = await this.permissionRepo.find({
       where: { type: 'MENU' },
-      order: { order: 'ASC' },
+      order: { sort: 'ASC' },
     });
     return this.sharedService.handleTree(permissions);
   }

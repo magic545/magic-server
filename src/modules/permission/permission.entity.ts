@@ -68,7 +68,7 @@ export class Permission {
   enable: boolean;
 
   @Column({ nullable: true })
-  order: number;
+  sort: number;
 
   @ManyToMany(() => Role, (role) => role.permissions, {
     createForeignKeyConstraints: false,

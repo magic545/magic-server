@@ -28,7 +28,7 @@ import {
   UpdateRoleDto,
 } from './dto';
 import { JwtGuard, PreviewGuard, RoleGuard } from '@/common/guards';
-import { Roles } from '@/common/decorators/roles.decorator';
+import { Roles, SUPER_ADMIN } from '@/common/decorators/roles.decorator';
 
 @Controller('role')
 @UseGuards(JwtGuard, RoleGuard)
@@ -37,7 +37,7 @@ export class RoleController {
 
   @Post()
   @UseGuards(PreviewGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles(SUPER_ADMIN)
   create(@Body() createRoleDto: CreateRoleDto) {
     return this.roleService.create(createRoleDto);
   }
@@ -58,28 +58,28 @@ export class RoleController {
   }
 
   @Get(':id')
-  @Roles('SUPER_ADMIN')
+  @Roles(SUPER_ADMIN)
   findOne(@Param('id') id: string) {
     return this.roleService.findOne(+id);
   }
 
   @Patch(':id')
   @UseGuards(PreviewGuard)
-  @Roles('SUPER_ADMIN', 'SYS_ADMIN', 'ROLE_PMS')
+  @Roles(SUPER_ADMIN, 'SYS_ADMIN', 'ROLE_PMS')
   update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
     return this.roleService.update(+id, updateRoleDto);
   }
 
   @Delete(':id')
   @UseGuards(PreviewGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles(SUPER_ADMIN)
   remove(@Param('id') id: number) {
     return this.roleService.remove(+id);
   }
 
   @Post('permissions/add')
   @UseGuards(PreviewGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles(SUPER_ADMIN)
   addRolePermissions(@Body() dto: AddRolePermissionsDto) {
     return this.roleService.addRolePermissions(dto);
   }
@@ -92,7 +92,7 @@ export class RoleController {
   // 给角色分配用户
   @Patch('users/add/:roleId')
   @UseGuards(PreviewGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles(SUPER_ADMIN)
   addRoleUsers(@Param('roleId') roleId: string, @Body() dto: AddRoleUsersDto) {
     return this.roleService.addRoleUsers(+roleId, dto);
   }
@@ -100,7 +100,7 @@ export class RoleController {
   // 给角色取消分配用户
   @Patch('users/remove/:roleId')
   @UseGuards(PreviewGuard)
-  @Roles('SUPER_ADMIN')
+  @Roles(SUPER_ADMIN)
   removeRoleUsers(@Param('roleId') roleId: string, @Body() dto: AddRoleUsersDto) {
     return this.roleService.removeRoleUsers(+roleId, dto);
   }
